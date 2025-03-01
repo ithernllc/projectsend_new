@@ -2,11 +2,12 @@
 <html lang="en">
 
 <body>
-<hr>
-  <div class="container mt-2 text-center">
 
+  <div class="container mt-2">
+  <h2>Update Billing Profile</h2>
+  <p>If you wish to update your billing profile, click the button below.</p>
     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#updateModal">
-    Update Billing Profile
+    Update Billing 
     </button>
 
     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
@@ -21,7 +22,7 @@
           <div class="modal-body">
             Are you sure you want to update Billing Profile? This action cannot be undone.
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer ">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <a class="btn btn-danger" href="clients-edit.php?id=<?= $_GET['id'] ?>&action=update_billing">Update Billing Profile</a>
           </div>

@@ -2,8 +2,6 @@
 // cancel_subscription.php
 
 // Include the functions.php file to use the functions defined in it
-print_r($_SESSION);
-exit;
 $allowed_levels = array(9, 8);
 require_once 'bootstrap.php';
 log_in_required($allowed_levels);

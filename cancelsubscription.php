@@ -2,11 +2,11 @@
 <html lang="en">
 
 <body>
-<hr>
-  <div class="container mt-5 text-center">
+
+  <div class="container mt-2">
     <h2>Cancel Your Subscription</h2>
     <p>If you wish to cancel your subscription, click the button below.</p>
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal">
+    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#cancelModal">
       Cancel Subscription
     </button>
 

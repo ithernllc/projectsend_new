@@ -82,7 +82,31 @@ switch ($clients_form_type) {
         font-size: 12px;
         padding: 5px 6px;
         border-radius: 8px;
-    }
+        }
+        .payment-container {
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: "Arial", sans-serif;
+        }
+
+        #card-element {
+            padding: 12px;
+            border-radius: 6px;
+            background: #fff;
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d1d5db;
+        }
+
+        #card-errors {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+        }
 </style>
 <form action="<?php echo html_output($form_action); ?>" name="client_form" id="client_form" method="post" class="form-horizontal" data-form-type="<?php echo $clients_form_type; ?>">
     <?php addCsrf(); ?>
@@ -275,30 +299,20 @@ $(document).ready(function () {
         }
     });
     var stripe = Stripe('pk_test_51QkX2yKgzD75154hUn0E2KdV8LJIBaYswMiDxL7qFsKWztlh1jIhrwPRmr0fq3tIF2Yqj3pvMLS2dxBs7V6my2zs00hcNGn5Lr');  // Use your Stripe public key
-    // var elements = stripe.elements();
-    const appearance = { 
-        theme: 'stripe',
-
-    variables: {
-        colorPrimary: '#0570de',
-        colorBackground: '#ffffff',
-        colorText: '#30313d',
-        colorDanger: '#df1b41',
-        fontFamily: 'Ideal Sans, system-ui, sans-serif',
-        spacingUnit: '2px',
-        borderRadius: '4px',
-        // See all possible variables below
-    }
-     };
-    const options = { layout: 'accordion', /* options */ };
-    const elements = stripe.elements({ clientSecret, appearance });
-    const card = elements.create('payment', options);
-    // Create an instance of the card Element.
-    // var card = elements.create('card');
+    var elements = stripe.elements();
+    const style = {
+    base: {
+        color: "#32325d",
+        fontSize: "16px",
+        fontFamily: "Arial, sans-serif",
+        '::placeholder': { color: "#aab7c4" }
+    },
+    invalid: { color: "#fa755a" }
+};
+    const card = elements.create('card',{style});
     if (card) {
-    // Add an instance of the card Element to the page.
+
     card.mount('#card-element');  // Use the correct element id
-    // Handle form submission
     document.getElementById('client_form').addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -471,14 +485,14 @@ $(document).ready(function () {
     <?php
     if ($clients_form_type == 'new_client_self') {
         recaptcha2_render_widget();?>
-        <div class="text-center mt-4">
-        <div class="form-check d-inline-block">
-            <input class="form-check-input " type="checkbox" id="termsCheckbox"  name="terms&condition" required>
+        <div class="form-group row">
+            <div class="col-sm-8 offset-sm-4">
+            <input  type="checkbox" id="termsCheckbox"  name="terms&condition" required>
             <label class="form-check-label" for="termsCheckbox">
                 I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a>
             </label>
+            </div>
         </div>
-    </div>
     <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

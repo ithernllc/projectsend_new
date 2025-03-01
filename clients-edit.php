@@ -209,10 +209,22 @@ include_once ADMIN_VIEWS_DIR . DS . 'header.php';
                 echo $edit_client->getValidationErrors();
 
                 include_once FORMS_DIR . DS . 'clients.php';
-                if($client_arguments['subscription_status'] != 'pending_cancellation') {
-                    include_once 'cancelsubscription.php';
-                }
-                include_once 'updatebilling.php';
+                
+                
+                ?>
+            </div>
+            <div class="row">
+                <?php
+                    if ($client_arguments['subscription_status'] != 'pending_cancellation') {
+                ?>
+                    <div class="col-md-6 mb-3">
+                        <?php include_once 'cancelsubscription.php'; ?>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <?php include_once 'updatebilling.php'; ?>
+                    </div>
+                <?php
+                    }
                 ?>
             </div>
         </div>

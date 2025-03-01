@@ -204,7 +204,7 @@ class Users
             try {
                 $session = \Stripe\BillingPortal\Session::create([
                     'customer' => 'cus_RhXJvgNVOJ5idE',
-                    'return_url' => 'https://yourwebsite.com/account',
+                    'return_url' => 'https://projectsend.techassures.com/',
                 ]);
             
                 return $session->url;
@@ -541,73 +541,73 @@ class Users
             /** Who is creating the client? */
             $this->created_by = (defined('CURRENT_USER_USERNAME')) ? CURRENT_USER_USERNAME : null;
 
-// Step 1: Convert the Stripe Token to a PaymentMethod
-try {
-    $paymentMethod = \Stripe\PaymentMethod::create([
-        'type' => 'card',
-        'card' => [
-            'token' => $this->stripeToken, // Stripe Token from frontend
-        ],
-    ]);
-} catch (\Exception $e) {
-    error_log('Stripe PaymentMethod creation failed for user: ' . $this->email . ' - Error: ' . $e->getMessage()); // Log error
-    return ['error' => 'Stripe PaymentMethod creation failed'];
-}
+        // Step 1: Convert the Stripe Token to a PaymentMethod
+        try {
+            $paymentMethod = \Stripe\PaymentMethod::create([
+                'type' => 'card',
+                'card' => [
+                    'token' => $this->stripeToken, // Stripe Token from frontend
+                ],
+            ]);
+        } catch (\Exception $e) {
+            error_log('Stripe PaymentMethod creation failed for user: ' . $this->email . ' - Error: ' . $e->getMessage()); // Log error
+            return ['error' => 'Stripe PaymentMethod creation failed'];
+        }
 
-// Step 2: Create the Stripe Customer with the PaymentMethod
-try {
-    $customer = \Stripe\Customer::create([
-        'email' => $this->email,
-        'name' => $this->name,
-        'payment_method' => $paymentMethod->id, // Use the PaymentMethod ID instead of the token
-        'invoice_settings' => ['default_payment_method' => $paymentMethod->id],
-    ]);
-} catch (\Exception $e) {
-    error_log('Stripe customer creation failed for user: ' . $this->email . ' - Error: ' . $e->getMessage()); // Log error
-    return ['error' => 'Stripe customer creation failed'];
-}
+        // Step 2: Create the Stripe Customer with the PaymentMethod
+        try {
+            $customer = \Stripe\Customer::create([
+                'email' => $this->email,
+                'name' => $this->name,
+                'payment_method' => $paymentMethod->id, // Use the PaymentMethod ID instead of the token
+                'invoice_settings' => ['default_payment_method' => $paymentMethod->id],
+            ]);
+        } catch (\Exception $e) {
+            error_log('Stripe customer creation failed for user: ' . $this->email . ' - Error: ' . $e->getMessage()); // Log error
+            return ['error' => 'Stripe customer creation failed'];
+        }
 
-// If customer creation fails, return early
-if (!$customer || empty($customer->id)) {
-    error_log('Stripe customer creation failed for user: ' . $this->email); // Log error
-    return ['error' => 'Stripe customer creation failed'];
-}
+        // If customer creation fails, return early
+        if (!$customer || empty($customer->id)) {
+            error_log('Stripe customer creation failed for user: ' . $this->email); // Log error
+            return ['error' => 'Stripe customer creation failed'];
+        }
 
-// Step 3: Determine the Stripe Price ID based on plan
-$priceId = '';
+        // Step 3: Determine the Stripe Price ID based on plan
+        $priceId = '';
 
-if ($this->plan == 'annual') {
-    $priceId = 'price_1Qo7zSKgzD75154hA3BQIPrn'; // Replace with actual Stripe Price ID for yearly plan
-} elseif ($this->plan == 'monthly') {
-    $priceId = 'price_1Qo7zRKgzD75154hSsErotS1'; // Replace with actual Stripe Price ID for monthly plan
-} else {
-    error_log('Invalid plan selected for user: ' . $this->email .$this->plan); // Log error
-    return ['error' => 'Invalid plan selection'];
-}
+        if ($this->plan == 'annual') {
+            $priceId = 'price_1Qo7zSKgzD75154hA3BQIPrn'; // Replace with actual Stripe Price ID for yearly plan
+        } elseif ($this->plan == 'monthly') {
+            $priceId = 'price_1Qo7zRKgzD75154hSsErotS1'; // Replace with actual Stripe Price ID for monthly plan
+        } else {
+            error_log('Invalid plan selected for user: ' . $this->email .$this->plan); // Log error
+            return ['error' => 'Invalid plan selection'];
+        }
 
-// Step 4: Create the Subscription with a 30-Day Trial
-try {
-    $subscription = \Stripe\Subscription::create([
-        'customer' => $customer->id,
-        'items' => [
-            [
-                'price' => $priceId, // Use the appropriate price ID
-            ]
-        ],
-        'trial_period_days' => 30, // 30-day free trial
-    ]);
-} catch (\Exception $e) {
-    error_log('Stripe subscription creation failed for user: ' . $this->email . ' - Error: ' . $e->getMessage()); // Log error
-    return ['error' => 'Stripe subscription creation failed'];
-}
+        // Step 4: Create the Subscription with a 30-Day Trial
+        try {
+            $subscription = \Stripe\Subscription::create([
+                'customer' => $customer->id,
+                'items' => [
+                    [
+                        'price' => $priceId, // Use the appropriate price ID
+                    ]
+                ],
+                'trial_period_days' => 30, // 30-day free trial
+            ]);
+        } catch (\Exception $e) {
+            error_log('Stripe subscription creation failed for user: ' . $this->email . ' - Error: ' . $e->getMessage()); // Log error
+            return ['error' => 'Stripe subscription creation failed'];
+        }
 
-// If subscription creation fails, return early
-if (!$subscription || empty($subscription->id)) {
-    error_log('Stripe subscription creation failed for user: ' . $this->email); // Log error
-    return ['error' => 'Stripe subscription creation failed'];
-}   
-$this->stripe_customer_id = $customer->id;
-$this->stripe_subscription_id = $subscription->id;
+        // If subscription creation fails, return early
+        if (!$subscription || empty($subscription->id)) {
+            error_log('Stripe subscription creation failed for user: ' . $this->email); // Log error
+            return ['error' => 'Stripe subscription creation failed'];
+        }   
+        $this->stripe_customer_id = $customer->id;
+        $this->stripe_subscription_id = $subscription->id;
             /** Insert the client information into the database */
             $statement = $this->dbh->prepare(
                 "INSERT INTO " . TABLE_USERS . " (
