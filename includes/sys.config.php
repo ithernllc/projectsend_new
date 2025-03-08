@@ -32,16 +32,16 @@
 define('DB_DRIVER', 'mysql');
 
 /** Database name */
-define('DB_NAME', 'techassure');
+define('DB_NAME', 'SharemyFiles');
 
 /** Database host (in most cases it's localhost) */
 define('DB_HOST', 'localhost');
 
 /** Database username (must be assigned to the database) */
-define('DB_USER', 'root');
+define('DB_USER', 'Admin_SharemyFiles');
 
 /** Database password */
-define('DB_PASSWORD', '');
+define('DB_PASSWORD', 'Techassures1');
 
 /**
  * Prefix for the tables. Set to something other than tbl_ for increased
